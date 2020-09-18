@@ -8,3 +8,7 @@ target
 .gradle
 examples/**/dump.lsif
 build
+bin/
+*.json
+*.dot
+*.lsif

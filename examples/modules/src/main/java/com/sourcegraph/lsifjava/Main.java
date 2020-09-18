@@ -10,8 +10,6 @@ public class Main {
     public static void main(String[] args) {
         Sample.nom();
 
-        Abstract.create();
-
         try(Tracer tracer = new MockTracer()) {
             Span builder = tracer.buildSpan("test").start();
             builder.setTag("hello", "sourcegraph");

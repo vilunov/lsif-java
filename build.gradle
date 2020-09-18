@@ -6,6 +6,7 @@ plugins {
     id 'java'
     id 'maven-publish'
     id 'application'
+    id "com.palantir.graal" version "0.7.1-14-g8d28394"
 }
 
 application {
@@ -21,7 +22,8 @@ repositories {
 
 dependencies {
     compile 'com.github.javaparser:javaparser-symbol-solver-core:3.16.1'
-    compile 'fr.inria.gforge.spoon:spoon-core:8.3.0-beta-8'
+    compile 'fr.inria.gforge.spoon:spoon-core:8.4.0-SNAPSHOT'
+    /* compile 'fr.inria.gforge.spoon:spoon-core:8.3.0-beta-8' */
     compile 'com.google.code.gson:gson:2.8.6'
     compile 'commons-cli:commons-cli:1.4'
     compile 'org.slf4j:slf4j-api:1.7.30'
@@ -43,4 +45,17 @@ publishing {
             from components.java
         }
     }
+}
+
+graal {
+    mainClass 'Main'
+    outputName 'lsif-java'
+    graalVersion '20.2.0'
+    option '--static'
+    option '--no-fallback'
+    option '--initialize-at-build-time'
+    option '--initialize-at-run-time=""'
+    option '-H:IncludeResourceBundles=org.eclipse.jdt.internal.compiler.batch.messages'
+    option '-H:IncludeResourceBundles=org.eclipse.jdt.internal.compiler.problem.messages'
+    option '-H:ReflectionConfigurationFiles=reflectconfig.json'
 }

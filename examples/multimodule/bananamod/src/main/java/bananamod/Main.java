@@ -1,0 +1,7 @@
+package bananamod;
+
+public class Main {
+	public static void main() {
+		
+	}
+}
