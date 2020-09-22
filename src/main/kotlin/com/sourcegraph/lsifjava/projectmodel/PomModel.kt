@@ -46,12 +46,12 @@ final class PomModel: ProjectModel {
         }
 
         val reader = MavenXpp3Reader();
-        FileReader(pomFile).use { 
+        FileReader(pomFile).use({ it ->
             model = reader.read(it)!!
             
             val allModules = HashSet<String>()
 
-            for(profile in model.profiles) {
+            /* for(profile in model.profiles) {
                 for(module in profile.modules) {
                     allModules.add(module)
                     PomModel(Paths.get(pomFile.parent, module), this, project)
@@ -61,8 +61,8 @@ final class PomModel: ProjectModel {
             for(module in model.getModules()) {
                 if(module.contains(module)) continue
                 PomModel(Paths.get(pomFile.parent, module), this, project)
-            }
-        }
+            } */
+        })
     }
 
     // TODO: interpolate variables from properties etc

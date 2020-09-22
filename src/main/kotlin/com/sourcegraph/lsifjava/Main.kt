@@ -12,37 +12,36 @@ import com.github.javaparser.ast.PackageDeclaration
 import com.github.javaparser.ast.visitor.ModifierVisitor
 
 import java.nio.file.Path
+import java.io.PrintWriter
+import java.io.File
 
 fun main(args: Array<String>) {
-    val args = parse(args)
-    println(args)
+    val arguments = parse(args)
 
-    val buildTool = determineBuildTool(args.projectRoot)
+    val writer = createWriter(arguments)
+    val emitter = Emitter(writer)
 
-    val typeSolver = CombinedTypeSolver()
-    typeSolver.add(ReflectionTypeSolver())
+    val start = System.nanoTime()
 
-    val symbolSolver = JavaSymbolSolver(typeSolver)
-    StaticJavaParser.getConfiguration().setSymbolResolver(symbolSolver)
+    var stats = Stats(0, 0)
 
-    val compUnit = StaticJavaParser.parse("""
-    package sample.text.ru;
-    class Main {
-        public static void main(String[] args) {
-            System.out.println(args[0]);
-        }
-
-        boolean test() {
-            return true;
-        }
+    try {
+        stats = index(arguments, emitter, stats)
+    } finally {
+        writer.flush()
+        writer.close()
     }
-    """)
 
+    displayStats(emitter, start, stats)
+}
 
+private fun createWriter(args: Arguments): PrintWriter {
+    return PrintWriter(File(args.outFile))
+}
 
-    compUnit.findAll(PackageDeclaration::class.java).forEach {
-        println(it)
-    };
+private fun displayStats(emitter: Emitter, start: Long, stats: Stats) {
+    println("${stats.numFiles} file(s), ${stats.numDefs} def(s), ${emitter.numElements()} element(s)")
+    println("Processed in ${(System.nanoTime() - start) / 1e6}")
 }
 
 enum class BuildTool {

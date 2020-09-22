@@ -25,6 +25,7 @@ fun main(args: Array<String>) {
     val symbolSolver = JavaSymbolSolver(typeSolver)
     StaticJavaParser.getConfiguration().setSymbolResolver(symbolSolver)
 
+
     val compUnit = StaticJavaParser.parse("""
     package sample.text.ru;
     class Main {
